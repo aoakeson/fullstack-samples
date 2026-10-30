@@ -1,0 +1,11 @@
+{
+  // Cloudflare Worker serving the built static site. Deploy with `npm run deploy`.
+  "name": "portal-kanban",
+  "compatibility_date": "2026-10-17",
+  "assets": {
+    "directory": "./dist",
+    // Serve index.html for unknown paths, as a single-page app expects.
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [{ "pattern": "kanban.andrewoakeson.com", "custom_domain": true }]
+}

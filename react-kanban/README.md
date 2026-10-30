@@ -16,6 +16,8 @@ npm run dev        # http://localhost:5173
 
 Other scripts: `npm test` (Vitest), `npm run typecheck`, `npm run lint`, `npm run build`.
 
+**Live:** https://kanban.andrewoakeson.com. It's deployed as a Cloudflare Worker serving the static `dist/` (see `wrangler.jsonc`); `npm run deploy` builds and ships it.
+
 ## How it's put together
 
 ```
