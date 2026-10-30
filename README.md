@@ -2,19 +2,30 @@
 
 Two small, self-contained projects, each with its own README.
 
-| Project | Folder | Status |
+| Project | Folder | Stack |
 |---|---|---|
-| Rails data model: providers, clients, plans and journal entries | [`rails-data-model/`](rails-data-model/README.md) | Done: schema, models, 4 queries, seeds, tests |
-| React + TypeScript Kanban board | `react-kanban/` | In progress |
+| Data model: providers, clients, plans and journal entries | [`rails-data-model/`](rails-data-model/README.md) | Ruby on Rails 8, SQLite, Minitest |
+| Kanban board with Rick and Morty characters | [`react-kanban/`](react-kanban/README.md) | React 19, TypeScript, Vite, dnd-kit, Vitest |
 
-## Quick start: Rails
+## Quick start
+
+**Rails** (needs Ruby 3.4)
 
 ```bash
 cd rails-data-model
 bundle install
 bin/rails db:prepare db:seed
-bin/rails runner script/queries.rb   # prints the 4 queries + SQL
+bin/rails runner script/queries.rb   # prints the 4 queries + their SQL
 bin/rails test
 ```
 
-See [`rails-data-model/README.md`](rails-data-model/README.md) for the schema, design tradeoffs and scaling notes.
+**React** (needs Node 20+)
+
+```bash
+cd react-kanban
+npm install
+npm run dev                           # http://localhost:5173
+npm test
+```
+
+Each README covers the design, the tradeoffs, and what could be built next.
