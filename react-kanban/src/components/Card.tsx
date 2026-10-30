@@ -22,7 +22,11 @@ type Props = {
 
 /** A draggable card. `useSortable` wires it into its column's SortableContext. */
 export function Card({ item, column, onMove, onRemove }: Props) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+    // Snappier than dnd-kit's 250ms default, so cards settle without a visible lag.
+    transition: { duration: 150, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
+  })
 
   // Keep a press on the menu from starting a drag (mouse, touch and pointer sensors).
   const stop = { onPointerDown: swallow, onMouseDown: swallow, onTouchStart: swallow, onKeyDown: swallow }

@@ -46,9 +46,11 @@ See [DESIGN.md](DESIGN.md) for the design system: tokens, type, spacing, layout 
 
 There's no router: the app is a single view. TanStack Router would be the pick if one were needed (e.g. `/boards/:id`).
 
-**Drag and drop** with dnd-kit:
-- Each column is a `SortableContext` for reordering *and* a `useDroppable` target so cards can land in an empty column.
-- `onDragOver` moves the card into the hovered column while dragging, so it visibly joins that column instead of jumping on release. `onDragEnd` sets the final index.
+**Drag and drop** with dnd-kit, following its multi-container pattern:
+- Each column is a `SortableContext` for reordering *and* a `useDroppable` target (the whole column, header included) so there's always a large area to drop on.
+- Collision detection is two-step: find the column under the pointer, then the closest card inside it. Letting the big column rect compete directly with small card rects (the default `closestCorners`) makes cards jump around. Dropping in a gap between columns reuses the last valid target instead of snapping back.
+- `MeasuringStrategy.Always` re-measures drop zones during the drag; cards change columns mid-drag, so positions measured at drag start would be stale.
+- `onDragOver` moves the card into the hovered column while dragging, above or below the card it's over depending on the midpoint, so it visibly joins that column instead of jumping on release. `onDragEnd` sets the final index.
 - A `DragOverlay` renders the card that follows the pointer; without it a card re-parented between columns flickers.
 - Mouse drags start after 5px, touch drags after a 200ms press (so a swipe still scrolls), and the keyboard sensor makes it accessible. The card menu offers "Move to …" as a non-drag path.
 - The column a drag started in is kept in a ref, so confetti fires only when a card *enters* Done.

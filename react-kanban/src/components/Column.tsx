@@ -16,17 +16,18 @@ type Props = {
 }
 
 export function Column({ id, items, onMove, onRemove, onAddTask }: Props) {
-  // The column body is a drop target too, so cards can land in an empty column.
+  // The whole column (header included) is a drop target, so there's always a
+  // large area to drop on, even when the column is empty.
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
     <section
+      ref={setNodeRef}
       aria-label={COLUMN_TITLES[id]}
       className={cn(
         // Mobile: one column per screen in a snap-scroll row. Desktop: equal grid columns.
         'flex min-h-0 w-[85vw] shrink-0 snap-center flex-col rounded-xl bg-muted/70 md:w-auto',
-        'ring-primary/40 transition-shadow',
-        isOver && 'ring-2',
+        isOver && 'bg-muted',
       )}
     >
       <header className="flex items-center gap-2 px-3 pt-3 pb-2">
@@ -39,7 +40,7 @@ export function Column({ id, items, onMove, onRemove, onAddTask }: Props) {
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-          <div ref={setNodeRef} className="flex min-h-full flex-col gap-2 px-2 pb-2">
+          <div className="flex min-h-full flex-col gap-2 px-2 pb-2">
             {items.map((item) => (
               <Card key={item.id} item={item} column={id} onMove={onMove} onRemove={onRemove} />
             ))}
