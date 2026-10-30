@@ -1,0 +1,22 @@
+# Fixture files can run Ruby inside <%= %>. That's how each entry gets a
+# different date, which the "sorted by date" tests rely on.
+
+alice_old:
+  client: alice
+  body: Oatmeal and berries for breakfast.
+  created_at: <%= 3.days.ago %>
+
+alice_new:
+  client: alice
+  body: Walked 5k, felt great.
+  created_at: <%= 1.day.ago %>
+
+bob_mid:
+  client: bob
+  body: Skipped lunch, snacked on almonds.
+  created_at: <%= 2.days.ago %>
+
+cara_recent:
+  client: cara
+  body: Slept 8 hours!
+  created_at: <%= 1.hour.ago %>

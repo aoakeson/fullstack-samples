@@ -1,0 +1,24 @@
+# `provider: dana` points at the dana row in providers.yml; Rails fills in provider_id.
+#
+#   Dana -> Alice (premium), Bob (basic)
+#   Nate -> Alice (basic),   Cara (premium)
+
+dana_alice:
+  provider: dana
+  client: alice
+  plan: premium
+
+dana_bob:
+  provider: dana
+  client: bob
+  plan: basic
+
+nate_alice:
+  provider: nate
+  client: alice
+  plan: basic
+
+nate_cara:
+  provider: nate
+  client: cara
+  plan: premium

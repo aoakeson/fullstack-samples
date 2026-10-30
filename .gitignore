@@ -1,0 +1,20 @@
+# --- Rails (rails-data-model/) ---
+/rails-data-model/.bundle
+/rails-data-model/log/*
+/rails-data-model/tmp/*
+!/rails-data-model/log/.keep
+!/rails-data-model/tmp/.keep
+/rails-data-model/storage/*
+!/rails-data-model/storage/.keep
+# Secret key for config/credentials.yml.enc — never commit it.
+/rails-data-model/config/master.key
+
+# --- Node / React (react-kanban/) ---
+node_modules/
+dist/
+
+# --- Editors / OS ---
+.DS_Store
+.idea/
+.vscode/
+*.log

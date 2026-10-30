@@ -1,0 +1,10 @@
+# Fixtures are sample rows loaded into the test database before each test.
+# Each top-level key ("dana") is a label; tests fetch the row with providers(:dana).
+
+dana:
+  name: Dana Dietitian
+  email: dana@wellness.example
+
+nate:
+  name: Nate Nutritionist
+  email: nate@wellness.example

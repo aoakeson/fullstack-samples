@@ -1,0 +1,5 @@
+# Keep Unix line endings so bin/ scripts run on macOS/Linux.
+* text=auto eol=lf
+# Collapse generated files in GitHub diffs.
+rails-data-model/db/schema.rb linguist-generated
+rails-data-model/Gemfile.lock linguist-generated
