@@ -1,44 +1,22 @@
-import { useEffect, useState } from 'react'
-import { fetchCharacters } from '../api/rickAndMorty'
-import type { Character } from '../types'
-
-const DEBOUNCE_MS = 300
-
-type Result = {
-  forQuery: string | null // which search these results belong to (null = nothing loaded yet)
-  characters: Character[]
-  error: string | null
-}
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { fetchCharacters } from '@/api/rickAndMorty'
+import { useDebouncedValue } from './useDebouncedValue'
 
 /**
- * Search characters by name. Waits until the user pauses typing, then fetches,
- * cancelling any request that's still in flight.
+ * Search characters by name.
+ *
+ * TanStack Query handles caching (typing "rick", then "ric", then "rick" again
+ * hits the cache), request cancellation via the signal it passes in, and the
+ * loading/error states. `keepPreviousData` keeps the last results on screen
+ * while a new search is in flight, so the list never flashes empty.
  */
-export function useCharacters(query: string) {
-  const [result, setResult] = useState<Result>({ forQuery: null, characters: [], error: null })
+export function useCharacters(search: string) {
+  const name = useDebouncedValue(search.trim(), 300)
 
-  useEffect(() => {
-    const controller = new AbortController()
-
-    const timer = setTimeout(async () => {
-      try {
-        const characters = await fetchCharacters(query.trim(), controller.signal)
-        setResult({ forQuery: query, characters, error: null })
-      } catch (err) {
-        if (controller.signal.aborted) return // superseded by a newer search
-        const error = err instanceof Error ? err.message : 'Something went wrong'
-        setResult({ forQuery: query, characters: [], error })
-      }
-    }, DEBOUNCE_MS)
-
-    // Cleanup runs when `query` changes or the component unmounts.
-    return () => {
-      clearTimeout(timer)
-      controller.abort()
-    }
-  }, [query])
-
-  // We're loading whenever the results we have aren't for the current query.
-  // Previous results stay visible meanwhile, so the list doesn't flash empty.
-  return { characters: result.characters, error: result.error, loading: result.forQuery !== query }
+  return useQuery({
+    queryKey: ['characters', name],
+    queryFn: ({ signal }) => fetchCharacters(name, signal),
+    placeholderData: keepPreviousData,
+    staleTime: 5 * 60 * 1000, // character data doesn't change; don't refetch for 5 minutes
+  })
 }

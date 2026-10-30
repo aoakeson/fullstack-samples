@@ -1,306 +1,126 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/manrope";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Design tokens. Values live on :root / .dark; the @theme block exposes them
+  to Tailwind as utilities (bg-primary, text-status-doing, …).
+  See DESIGN.md for the reasoning behind each choice.
+*/
+
+@theme inline {
+    --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-sans);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    /* Task status: one color per column, used for avatar rings and counts. */
+    --color-status-todo: var(--status-todo);
+    --color-status-doing: var(--status-doing);
+    --color-status-done: var(--status-done);
+
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+}
+
 :root {
-  --bg: #f4f5f7;
-  --surface: #ffffff;
-  --surface-2: #eef0f3;
-  --text: #1f2328;
-  --muted: #6b7280;
-  --border: #d9dde3;
-  --accent: #2f6fed;
-  --accent-soft: #e4ecfd;
-  --danger: #c0392b;
-  --radius: 10px;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.05);
+    --radius: 0.75rem;
 
-  color: var(--text);
-  background: var(--bg);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  font-size: 15px;
-  line-height: 1.4;
-  color-scheme: light dark;
+    --background: oklch(0.975 0.003 240);
+    --foreground: oklch(0.21 0.012 250);
+    --card: oklch(1 0 0);
+    --card-foreground: var(--foreground);
+    --popover: oklch(1 0 0);
+    --popover-foreground: var(--foreground);
+
+    /* Teal is the single accent, and also the color of "Done". */
+    --primary: oklch(0.51 0.09 185);
+    --primary-foreground: oklch(0.99 0 0);
+    --secondary: oklch(0.945 0.004 240);
+    --secondary-foreground: var(--foreground);
+    --muted: oklch(0.945 0.004 240);
+    --muted-foreground: oklch(0.52 0.02 250);
+    --accent: oklch(0.945 0.004 240);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.915 0.005 240);
+    --input: oklch(0.915 0.005 240);
+    --ring: oklch(0.6 0.08 185);
+
+    --status-todo: oklch(0.56 0.03 255);
+    --status-doing: oklch(0.68 0.16 65);
+    --status-done: var(--primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #15171b;
-    --surface: #1f2228;
-    --surface-2: #272b32;
-    --text: #e6e8eb;
-    --muted: #9aa3ad;
-    --border: #353a42;
-    --accent: #6c9cff;
-    --accent-soft: #233253;
-    --danger: #ff7b6b;
-  }
+.dark {
+    --background: oklch(0.18 0.008 250);
+    --foreground: oklch(0.95 0.005 240);
+    --card: oklch(0.23 0.01 250);
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.23 0.01 250);
+    --popover-foreground: var(--foreground);
+
+    --primary: oklch(0.74 0.1 180);
+    --primary-foreground: oklch(0.2 0.03 185);
+    --secondary: oklch(0.28 0.01 250);
+    --secondary-foreground: var(--foreground);
+    --muted: oklch(0.28 0.01 250);
+    --muted-foreground: oklch(0.7 0.015 250);
+    --accent: oklch(0.28 0.01 250);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.66 0.08 185);
+
+    --status-todo: oklch(0.7 0.03 255);
+    --status-doing: oklch(0.8 0.14 75);
+    --status-done: var(--primary);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 16px 48px;
-}
-
-h1 {
-  font-size: 1.6rem;
-  margin: 0 0 16px;
-}
-
-h2 {
-  font-size: 0.95rem;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-}
-
-img {
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-input,
-button {
-  font: inherit;
-  color: inherit;
-}
-
-input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-}
-
-input:focus-visible,
-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-/* --- New item form --- */
-
-.new-item {
-  display: grid;
-  gap: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.new-item label {
-  display: grid;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.new-item-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.assignee {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-}
-
-.new-item button[type='submit'] {
-  padding: 9px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.new-item button[type='submit']:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* --- Character picker --- */
-
-.picker {
-  display: grid;
-  gap: 8px;
-}
-
-.picker-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 6px;
-  max-height: 180px;
-  overflow-y: auto;
-  padding: 6px;
-  background: var(--surface-2);
-  border-radius: 8px;
-}
-
-.picker-status {
-  grid-column: 1 / -1;
-  margin: 8px;
-  font-weight: 400;
-}
-
-.picker-status.error {
-  color: var(--danger);
-}
-
-.picker-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
-  text-align: left;
-  font-weight: 500;
-  background: var(--surface);
-  border: 1px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.picker-option:hover {
-  border-color: var(--border);
-}
-
-.picker-option.selected {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.picker-option small,
-.card small {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--muted);
-}
-
-/* --- Board --- */
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-@media (max-width: 720px) {
-  .board {
-    grid-template-columns: 1fr;
-  }
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  background: var(--surface-2);
-  border-radius: var(--radius);
-  border: 1px solid transparent;
-  transition: border-color 0.15s;
-}
-
-.column.over {
-  border-color: var(--accent);
-}
-
-.column header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px 4px;
-}
-
-.count {
-  min-width: 22px;
-  padding: 1px 7px;
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--muted);
-  background: var(--surface);
-  border-radius: 999px;
-}
-
-.column-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  min-height: 120px;
-  padding: 10px;
-}
-
-.empty {
-  margin: auto;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-/* --- Cards --- */
-
-.card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 36px 10px 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  cursor: grab;
-  touch-action: none; /* let the pointer sensor handle touch drags */
-}
-
-.card:active {
-  cursor: grabbing;
-}
-
-.card.dragging {
-  opacity: 0.35;
-}
-
-.card.overlay {
-  cursor: grabbing;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
-  transform: rotate(2deg);
-}
-
-.card-remove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 24px;
-  height: 24px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.card-remove:hover {
-  background: var(--surface-2);
-  color: var(--danger);
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    html {
+        @apply font-sans antialiased;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 }

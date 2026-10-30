@@ -16,6 +16,16 @@ export const COLUMN_TITLES: Record<ColumnId, string> = {
   done: 'Done',
 }
 
+/**
+ * Status color per column (tokens in index.css). Written out in full so
+ * Tailwind can see the class names at build time.
+ */
+export const STATUS_STYLES: Record<ColumnId, { ring: string; dot: string; text: string }> = {
+  todo: { ring: 'ring-status-todo', dot: 'bg-status-todo', text: 'text-status-todo' },
+  doing: { ring: 'ring-status-doing', dot: 'bg-status-doing', text: 'text-status-doing' },
+  done: { ring: 'ring-status-done', dot: 'bg-status-done', text: 'text-status-done' },
+}
+
 /** One card on the board. Every item must have a character assigned. */
 export type Item = {
   id: string

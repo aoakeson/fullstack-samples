@@ -1,18 +1,33 @@
-import { useReducer } from 'react'
-import { boardReducer, emptyBoard } from './board/boardReducer'
+import { useEffect, useReducer, useState } from 'react'
+import { boardReducer } from './board/boardReducer'
+import { loadBoard, saveBoard } from './board/storage'
 import { Board } from './components/Board'
-import { NewItemForm } from './components/NewItemForm'
+import { NewTaskDialog } from './components/NewTaskDialog'
+import { TopBar } from './components/TopBar'
 
 export default function App() {
-  // All board state lives here, in one reducer, so both the form and the
-  // board read from and write to the same source of truth.
-  const [state, dispatch] = useReducer(boardReducer, emptyBoard)
+  // All board state lives in one reducer; the dialog and the board both talk to it.
+  // The third argument lazily reads the saved board once, on first render.
+  const [state, dispatch] = useReducer(boardReducer, undefined, loadBoard)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  useEffect(() => saveBoard(state), [state])
+
+  const taskCount = Object.keys(state.items).length
 
   return (
-    <main>
-      <h1>Kanban</h1>
-      <NewItemForm onAdd={(title, character) => dispatch({ type: 'add', title, character })} />
-      <Board state={state} dispatch={dispatch} />
-    </main>
+    <div className="flex h-dvh flex-col">
+      <TopBar taskCount={taskCount} doneCount={state.columns.done.length} onNewTask={() => setDialogOpen(true)} />
+
+      <main className="min-h-0 flex-1 pt-3 md:pt-4">
+        <Board state={state} dispatch={dispatch} onAddTask={() => setDialogOpen(true)} />
+      </main>
+
+      <NewTaskDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onAdd={(title, character) => dispatch({ type: 'add', title, character })}
+      />
+    </div>
   )
 }

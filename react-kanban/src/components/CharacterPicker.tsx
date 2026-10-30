@@ -1,6 +1,17 @@
+import { CheckIcon } from 'lucide-react'
 import { useState } from 'react'
-import { useCharacters } from '../hooks/useCharacters'
-import type { Character } from '../types'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import { useCharacters } from '@/hooks/useCharacters'
+import { cn } from '@/lib/utils'
+import type { Character } from '@/types'
 
 type Props = {
   value: Character | null
@@ -9,46 +20,51 @@ type Props = {
 
 /** Search the Rick and Morty API and pick one character. */
 export function CharacterPicker({ value, onChange }: Props) {
-  const [query, setQuery] = useState('')
-  const { characters, loading, error } = useCharacters(query)
+  const [search, setSearch] = useState('')
+  const { data: characters = [], isPending, isError, isFetching } = useCharacters(search)
 
   return (
-    <div className="picker">
-      <input
-        type="search"
-        placeholder="Search characters…"
-        aria-label="Search characters"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+    // The API already filters by name, so cmdk's own filtering is turned off.
+    <Command shouldFilter={false} className="rounded-lg border bg-card">
+      <CommandInput placeholder="Search characters" value={search} onValueChange={setSearch} />
 
-      <div className="picker-results" role="listbox" aria-label="Characters">
-        {error && <p className="picker-status error">Couldn't load characters: {error}</p>}
-        {!error && loading && characters.length === 0 && <p className="picker-status">Loading…</p>}
-        {!error && !loading && characters.length === 0 && <p className="picker-status">No matches</p>}
+      <CommandList
+        className={cn('max-h-52 transition-opacity', isFetching && 'opacity-60')}
+        aria-busy={isFetching}
+      >
+        {isError && (
+          <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+            Couldn't reach the character list. Check your connection and try again.
+          </p>
+        )}
+        {!isError && isPending && (
+          <p className="px-3 py-6 text-center text-sm text-muted-foreground">Loading characters…</p>
+        )}
+        {!isError && !isPending && <CommandEmpty>No characters match “{search.trim()}”.</CommandEmpty>}
 
-        {characters.map((character) => {
-          const selected = value?.id === character.id
-          return (
-            <button
-              key={character.id}
-              type="button"
-              role="option"
-              aria-selected={selected}
-              className={`picker-option${selected ? ' selected' : ''}`}
-              onClick={() => onChange(character)}
-            >
-              <img src={character.image} alt="" width={32} height={32} />
-              <span>
-                {character.name}
-                <small>
-                  {character.species} · {character.status}
-                </small>
-              </span>
-            </button>
-          )
-        })}
-      </div>
-    </div>
+        <CommandGroup>
+          {characters.map((character) => {
+            const selected = value?.id === character.id
+            return (
+              <CommandItem
+                key={character.id}
+                value={character.id}
+                onSelect={() => onChange(character)}
+                className="gap-3"
+                aria-selected={selected}
+              >
+                <Avatar size="sm">
+                  <AvatarImage src={character.image} alt="" />
+                  <AvatarFallback>{character.name[0]}</AvatarFallback>
+                </Avatar>
+                <span className="min-w-0 flex-1 truncate font-medium">{character.name}</span>
+                <span className="text-xs text-muted-foreground">{character.species}</span>
+                {selected && <CheckIcon className="size-4 text-primary" />}
+              </CommandItem>
+            )
+          })}
+        </CommandGroup>
+      </CommandList>
+    </Command>
   )
 }

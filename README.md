@@ -5,7 +5,7 @@ Two small, self-contained projects, each with its own README.
 | Project | Folder | Stack |
 |---|---|---|
 | Data model: providers, clients, plans and journal entries | [`rails-data-model/`](rails-data-model/README.md) | Ruby on Rails 8, SQLite, Minitest |
-| Kanban board with Rick and Morty characters | [`react-kanban/`](react-kanban/README.md) | React 19, TypeScript, Vite, dnd-kit, Vitest |
+| Kanban board with Rick and Morty characters | [`react-kanban/`](react-kanban/README.md) | React 19, TypeScript, Vite, Tailwind v4, shadcn/ui, TanStack Query, dnd-kit, Vitest |
 
 ## Quick start
 
